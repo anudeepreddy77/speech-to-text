@@ -1,0 +1,15 @@
+[server]
+maxUploadSize = 1024          # 1 GB in megabytes
+enableCORS = false
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "dark"
+backgroundColor      = "#0a0a0f"
+secondaryBackgroundColor = "#111118"
+textColor            = "#eeeef2"
+primaryColor         = "#f0b429"
+font                 = "sans serif"
