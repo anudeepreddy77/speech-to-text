@@ -17,7 +17,7 @@ st.set_page_config(
     page_title="Transcribe Studio",
     page_icon="🎙️",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",   
 )
 
 # ── Styling ───────────────────────────────────────────────────────────────────
@@ -26,19 +26,19 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg:         #0a0a0f;
-    --surface:    #111118;
-    --surface2:   #18181f;
+    --bg:         #FFFFFF;
+    --surface:    ##C9BFBF;
+    --surface2:   #a8a8eb;
     --surface3:   #1f1f28;
     --border:     #26262f;
     --border2:    #32323d;
-    --accent:     #f0b429;
-    --accent2:    #e8830a;
-    --accent-dim: rgba(240,180,41,0.10);
-    --accent-mid: rgba(240,180,41,0.20);
-    --text:       #eeeef2;
-    --text-dim:   #8888a0;
-    --text-faint: #44445a;
+    --accent:     #3b82f6;
+    --accent2:    #2563eb;
+    --accent-dim: rgba(59,130,246,0.10);
+    --accent-mid: rgba(59,130,246,0.20);
+    --text:       #111118;
+    --text-dim:   #111118;
+    --text-faint: #111118;
     --success:    #34d399;
     --mono: 'Space Mono', monospace;
     --sans: 'DM Sans', sans-serif;
@@ -47,22 +47,16 @@ st.markdown("""
 
 html, body, [class*="css"] { font-family: var(--sans) !important; }
 
-/* ── Hide Streamlit chrome ── */
+/* ── Hide Streamlit chrome + completely hide sidebar ── */
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton, [data-testid="stToolbar"] { display: none !important; }
+[data-testid="stSidebar"] { display: none !important; }   /* ← Sidebar fully removed */
 .block-container { padding-top: 2rem !important; }
 
 /* ── Global background ── */
 .stApp, .stApp > div { background: var(--bg) !important; }
 
-/* ── Sidebar ── */
-[data-testid="stSidebar"] {
-    background: var(--surface) !important;
-    border-right: 1px solid var(--border) !important;
-}
-[data-testid="stSidebar"] * { color: var(--text) !important; }
-
-/* ── Logo block ── */
+/* ── Logo block (now in main) ── */
 .logo-block {
     display: flex; align-items: center; gap: 14px;
     padding: 8px 0 20px;
@@ -82,7 +76,7 @@ html, body, [class*="css"] { font-family: var(--sans) !important; }
     letter-spacing: 0.08em; text-transform: uppercase;
 }
 
-/* ── Page header ── */
+/* Rest of your original styling (unchanged) */
 .page-header { margin-bottom: 6px; }
 .page-title {
     font-family: var(--sans);
@@ -92,7 +86,6 @@ html, body, [class*="css"] { font-family: var(--sans) !important; }
 .page-title em { font-style: normal; color: var(--accent); }
 .page-sub { font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; margin-bottom: 28px; }
 
-/* ── Upload zone ── */
 [data-testid="stFileUploader"] {
     background: var(--surface) !important;
     border: 2px dashed var(--border2) !important;
@@ -104,7 +97,6 @@ html, body, [class*="css"] { font-family: var(--sans) !important; }
 [data-testid="stFileUploader"] * { color: var(--text) !important; }
 [data-testid="stFileUploader"] small { color: var(--text-dim) !important; }
 
-/* ── Stat cards ── */
 .stat-row {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 10px; margin-bottom: 24px;
@@ -122,13 +114,11 @@ html, body, [class*="css"] { font-family: var(--sans) !important; }
     text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px;
 }
 
-/* ── Section label ── */
 .section-label {
     font-size: 0.7rem; font-weight: 600; color: var(--text-dim);
     text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
 }
 
-/* ── Transcript container ── */
 .transcript-wrap {
     max-height: 58vh; overflow-y: auto;
     padding-right: 4px; margin-top: 2px;
@@ -139,46 +129,6 @@ html, body, [class*="css"] { font-family: var(--sans) !important; }
     background: var(--border2); border-radius: 3px;
 }
 
-/* ── Segment row ── */
-.seg-row {
-    display: flex; gap: 12px; padding: 9px 12px;
-    border-radius: 8px; margin-bottom: 3px;
-    border: 1px solid transparent;
-    transition: background 0.15s, border-color 0.15s;
-}
-.seg-row:hover {
-    background: var(--surface2); border-color: var(--border);
-}
-.seg-row.active {
-    background: var(--accent-dim); border-color: var(--accent);
-}
-.seg-time {
-    font-family: var(--mono); font-size: 0.68rem;
-    color: var(--accent); min-width: 52px;
-    padding-top: 3px; flex-shrink: 0; cursor: pointer;
-}
-.seg-text { font-size: 0.88rem; color: var(--text); line-height: 1.55; }
-.seg-row.active .seg-text { color: var(--text); }
-
-/* ── Timestamp button override ── */
-div[data-testid="column"] .stButton > button {
-    background: transparent !important;
-    border: 1px solid var(--border2) !important;
-    color: var(--accent) !important;
-    font-family: var(--mono) !important;
-    font-size: 0.68rem !important;
-    padding: 4px 8px !important;
-    border-radius: 6px !important;
-    min-height: 0 !important; height: auto !important;
-    width: 100% !important;
-    transition: background 0.15s !important;
-}
-div[data-testid="column"] .stButton > button:hover {
-    background: var(--accent-dim) !important;
-    border-color: var(--accent) !important;
-}
-
-/* ── Primary action button ── */
 .stButton > button[kind="primary"] {
     background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
     color: #000 !important; font-weight: 600 !important;
@@ -187,28 +137,6 @@ div[data-testid="column"] .stButton > button:hover {
 }
 .stButton > button[kind="primary"]:hover { opacity: 0.88 !important; }
 
-/* ── Secondary button ── */
-.stButton > button[kind="secondary"] {
-    background: var(--surface2) !important;
-    color: var(--text) !important;
-    border: 1px solid var(--border2) !important;
-    border-radius: var(--radius) !important;
-    font-family: var(--sans) !important;
-}
-
-/* ── Select / radio ── */
-.stSelectbox > div > div, .stSelectbox > label {
-    color: var(--text) !important;
-}
-.stSelectbox > div > div > div {
-    background: var(--surface2) !important;
-    border-color: var(--border2) !important;
-    color: var(--text) !important;
-}
-.stRadio > label, .stRadio div { color: var(--text) !important; }
-[data-baseweb="select"] div { background: var(--surface2) !important; color: var(--text) !important; }
-
-/* ── Download button ── */
 .stDownloadButton > button {
     background: var(--surface2) !important;
     color: var(--text) !important;
@@ -218,26 +146,7 @@ div[data-testid="column"] .stButton > button:hover {
     font-size: 0.75rem !important;
     width: 100%;
 }
-.stDownloadButton > button:hover {
-    border-color: var(--accent) !important;
-    color: var(--accent) !important;
-}
 
-/* ── Info / warning ── */
-.stAlert { background: var(--surface2) !important; border: 1px solid var(--border2) !important; }
-
-/* ── Caption / label ── */
-.stCaption, caption, small { color: var(--text-dim) !important; }
-label { color: var(--text) !important; }
-p, span, div { color: var(--text); }
-
-/* ── Divider ── */
-hr { border-color: var(--border) !important; margin: 14px 0 !important; }
-
-/* ── Progress bar ── */
-.stProgress > div > div { background: var(--accent) !important; }
-
-/* ── Model badge ── */
 .model-badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: var(--accent-dim); border: 1px solid var(--accent-mid);
@@ -245,7 +154,6 @@ hr { border-color: var(--border) !important; margin: 14px 0 !important; }
     font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
 }
 
-/* ── File info card ── */
 .file-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px;
@@ -258,27 +166,18 @@ hr { border-color: var(--border) !important; margin: 14px 0 !important; }
     font-size: 0.75rem; color: var(--text-dim); margin-top: 6px;
 }
 
-/* ── Export section ── */
 .export-label {
     font-size: 0.7rem; font-weight: 600; color: var(--text-dim);
     text-transform: uppercase; letter-spacing: 0.1em;
     margin-top: 20px; margin-bottom: 8px;
 }
 
-/* ── Empty state ── */
-.empty-state {
-    text-align: center; padding: 60px 20px;
-    color: var(--text-dim); font-size: 0.9rem;
-}
-.empty-icon { font-size: 3rem; margin-bottom: 12px; }
-.empty-title { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-
-/* ── Spinner text ── */
-.stSpinner { color: var(--text-dim) !important; }
-
-/* ── Video / audio player ── */
 video, audio { border-radius: var(--radius) !important; width: 100% !important; }
 </style>
+
+<script>
+// Sidebar completely removed — controls are now next to upload
+</script>
 """, unsafe_allow_html=True)
 
 
@@ -295,11 +194,21 @@ LANGUAGE_MAP = {
 }
 
 MODEL_INFO = {
-    "tiny":   {"size": "~39 MB",  "speed": "~32× realtime", "note": "Fastest · basic accuracy"},
-    "base":   {"size": "~74 MB",  "speed": "~16× realtime", "note": "Great for clear audio"},
-    "small":  {"size": "~244 MB", "speed": "~6× realtime",  "note": "Recommended balance"},
-    "medium": {"size": "~769 MB", "speed": "~2× realtime",  "note": "High accuracy · slower"},
-    "large":  {"size": "~1.5 GB", "speed": "1× realtime",   "note": "Best accuracy · GPU recommended"},
+    "tiny": {
+        "size": "~39 MB",
+        "speed": "~32× realtime",
+        "note": "Very fast but lower accuracy — best for quick drafts or testing"
+    },
+    "base": {
+        "size": "~74 MB",
+        "speed": "~16× realtime",
+        "note": "Balanced speed and accuracy — good for most recordings"
+    },
+    "small": {
+        "size": "~244 MB",
+        "speed": "~6× realtime",
+        "note": "Slower but more accurate — better for longer or complex audio"
+    },
 }
 
 VIDEO_EXTS = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".flv", ".wmv", ".m4v", ".ogv", ".3gp"}
@@ -307,7 +216,6 @@ AUDIO_EXTS = {".mp3", ".wav", ".m4a", ".ogg", ".flac", ".aac", ".opus", ".wma", 
 
 
 def fmt_time(seconds: float, style: str = "display") -> str:
-    """Convert float seconds to a formatted timestamp string."""
     seconds = max(0.0, float(seconds))
     h = int(seconds // 3600)
     m = int((seconds % 3600) // 60)
@@ -316,7 +224,7 @@ def fmt_time(seconds: float, style: str = "display") -> str:
         return f"{h:02d}:{m:02d}:{int(s):02d},{int((s % 1)*1000):03d}"
     elif style == "vtt":
         return f"{h:02d}:{m:02d}:{int(s):02d}.{int((s % 1)*1000):03d}"
-    else:  # display
+    else:
         if h > 0:
             return f"{h}:{m:02d}:{int(s):02d}"
         return f"{m:02d}:{int(s):02d}"
@@ -367,14 +275,9 @@ def is_video(filename: str) -> bool:
 
 
 def extract_audio(src: str, dst: str) -> tuple[bool, str]:
-    """Use ffmpeg to extract & normalise audio to 16 kHz mono WAV."""
     cmd = [
         "ffmpeg", "-i", src,
-        "-vn",                    # drop video stream
-        "-acodec", "pcm_s16le",   # PCM 16-bit
-        "-ar", "16000",           # 16 kHz — Whisper's native rate
-        "-ac", "1",               # mono
-        "-y", dst,                # overwrite
+        "-vn", "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1", "-y", dst,
     ]
     r = subprocess.run(cmd, capture_output=True, text=True)
     return r.returncode == 0, r.stderr
@@ -382,7 +285,6 @@ def extract_audio(src: str, dst: str) -> tuple[bool, str]:
 
 @st.cache_resource(show_spinner=False)
 def load_model(name: str):
-    """Load & cache a Whisper model (persists across reruns)."""
     return whisper.load_model(name)
 
 
@@ -397,16 +299,20 @@ def file_size_human(path: str) -> str:
 
 # ── Session State Defaults ────────────────────────────────────────────────────
 _DEFAULTS = {
-    "temp_path":   None,   # path to original uploaded file
-    "audio_path":  None,   # path to extracted/converted audio for Whisper
-    "segments":    None,   # list of dicts from Whisper result
-    "seek_time":   0,      # seconds — current player position
+    "temp_path":   None,
+    "audio_path":  None,
+    "segments":    None,
+    "seek_time":   0,
     "is_video":    False,
     "file_name":   "",
     "file_size":   "",
     "duration":    0.0,
     "word_count":  0,
     "detected_lang": "",
+    # ← New: persist settings without sidebar
+    "model_choice": "base",
+    "lang_choice": "Auto-detect",
+    "task_choice": "transcribe",
 }
 for _k, _v in _DEFAULTS.items():
     st.session_state.setdefault(_k, _v)
@@ -424,71 +330,54 @@ def reset_state():
         st.session_state[k] = v
 
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("""
-    <div class="logo-block">
-        <div class="logo-icon">🎙️</div>
-        <div class="logo-text">
-            <div class="logo-title">Transcribe Studio</div>
-            <div class="logo-sub">Powered by Whisper</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
-    st.markdown('<div class="section-label">Model</div>', unsafe_allow_html=True)
-
-    model_choice = st.selectbox(
-        "Whisper model",
-        list(MODEL_INFO.keys()),
-        index=1,
-        label_visibility="collapsed",
-    )
-    info = MODEL_INFO[model_choice]
-    st.markdown(
-        f'<div class="model-badge">⚡ {info["speed"]}</div>',
-        unsafe_allow_html=True,
-    )
-    st.caption(f'{info["size"]} · {info["note"]}')
-
-    st.markdown("---")
-    st.markdown('<div class="section-label">Language</div>', unsafe_allow_html=True)
-
-    lang_choice = st.selectbox(
-        "Language",
-        list(LANGUAGE_MAP.keys()),
-        index=0,
-        label_visibility="collapsed",
-        help="Set 'Auto-detect' to let Whisper identify the language automatically.",
-    )
-
-    st.markdown("---")
-    st.markdown('<div class="section-label">Task</div>', unsafe_allow_html=True)
-
-    task_choice = st.radio(
-        "Task",
-        ["transcribe", "translate"],
-        format_func=lambda x: "Transcribe" if x == "transcribe" else "Translate → English",
-        label_visibility="collapsed",
-    )
-
-    st.markdown("---")
-
-    # Show reset only when a file is loaded
-    if st.session_state.temp_path:
-        if st.button("🗑️  Clear & start over", use_container_width=True):
-            reset_state()
-            st.rerun()
-
-    st.markdown("---")
-    st.caption("**System requirements**\n- ffmpeg (for video)\n- ~4 GB RAM for `medium`\n- GPU optional but speeds up larger models")
-
-
 # ── Main Page ─────────────────────────────────────────────────────────────────
 st.markdown("""
+<style>
+.page-header{
+    padding: 20px 20px;
+}
+
+.logo-block{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo-icon{
+    font-size:30px;
+}
+
+.logo-title{
+    font-size:20px;
+    font-weight:500;
+}
+
+.logo-title em{
+    font-size:15px;
+    font-style:normal;
+    color:#888;
+}
+
+.logo-sub{
+    font-size:15px;
+    color:#666;
+}
+
+.page-sub{
+    margin-top:15px;
+    font-size:15px;
+    color:#444;
+}
+</style>
+
 <div class="page-header">
-  <div class="page-title">Transcribe <em>Studio</em></div>
+  <div class="logo-block">
+      <div class="logo-icon">🎙️</div>
+      <div class="logo-text">
+          <div class="logo-title">Transcribe Studio <em> Developed by Anudeep Reddy</em></div>
+          <div class="logo-sub">Powered by Whisper</div>
+      </div>
+  </div>
   <div class="page-sub">
     Upload any audio or video · Get an accurate, timestamped transcript ·
     Export as SRT, VTT, TXT or JSON
@@ -498,43 +387,95 @@ st.markdown("""
 
 
 # ══════════════════════════════════════════════════════════════════
-# PHASE 1 — Upload
+# PHASE 1 — Upload + Settings moved next to uploader
 # ══════════════════════════════════════════════════════════════════
 if st.session_state.temp_path is None:
 
-    accepted_types = (
-        [e.lstrip(".") for e in sorted(AUDIO_EXTS)] +
-        [e.lstrip(".") for e in sorted(VIDEO_EXTS)]
-    )
+    st.markdown('<div class="section-label">Transcription Settings</div>', unsafe_allow_html=True)
 
-    uploaded = st.file_uploader(
-        "Drop your audio or video file here — up to 1 GB",
-        type=accepted_types,
-        help=(
-            "**Audio:** MP3, WAV, M4A, OGG, FLAC, AAC, OPUS, WMA\n\n"
-            "**Video:** MP4, MOV, AVI, MKV, WebM, FLV, WMV, M4V"
-        ),
-    )
+    set_col, up_col = st.columns([2, 3], gap="large")
 
-    if uploaded:
-        suffix = Path(uploaded.name).suffix.lower()
-        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-        with st.spinner("Saving file to disk…"):
-            shutil.copyfileobj(uploaded, tmp)
-        tmp.close()
+    with set_col:
+        # Model
+        model_choice = st.selectbox(
+            "Whisper model",
+            list(MODEL_INFO.keys()),
+            index=list(MODEL_INFO.keys()).index(st.session_state.model_choice),
+            label_visibility="collapsed",
+            key="model_select"
+        )
+        st.session_state.model_choice = model_choice
+        info = MODEL_INFO[model_choice]
+        st.markdown(
+            f'<div class="model-badge">⚡ {info["speed"]}</div>',
+            unsafe_allow_html=True,
+        )
+        st.caption(f'{info["size"]} · {info["note"]}')
 
-        st.session_state.temp_path = tmp.name
-        st.session_state.is_video  = is_video(uploaded.name)
-        st.session_state.file_name = uploaded.name
-        st.session_state.file_size = file_size_human(tmp.name)
-        st.rerun()
+        # Language
+        lang_choice = st.selectbox(
+            "Language",
+            list(LANGUAGE_MAP.keys()),
+            index=list(LANGUAGE_MAP.keys()).index(st.session_state.lang_choice),
+            label_visibility="collapsed",
+            help="Set 'Auto-detect' to let Whisper identify the language automatically.",
+            key="lang_select"
+        )
+        st.session_state.lang_choice = lang_choice
+
+        # Task
+        task_choice = st.radio(
+            "Task",
+            ["transcribe", "translate"],
+            format_func=lambda x: "Transcribe" if x == "transcribe" else "Translate → English",
+            index=0 if st.session_state.task_choice == "transcribe" else 1,
+            label_visibility="collapsed",
+            key="task_select"
+        )
+        st.session_state.task_choice = task_choice
+
+        # st.caption("**System requirements**\n- ffmpeg (for video)\n- ~4 GB RAM for `medium`\n- GPU optional")
+
+    with up_col:
+        accepted_types = (
+            [e.lstrip(".") for e in sorted(AUDIO_EXTS)] +
+            [e.lstrip(".") for e in sorted(VIDEO_EXTS)]
+        )
+
+        uploaded = st.file_uploader(
+            "Drop your audio or video file here — up to 200 MB",
+            type=accepted_types,
+            help=(
+                "**Audio:** MP3, WAV, M4A, OGG, FLAC, AAC, OPUS, WMA\n\n"
+                "**Video:** MP4, MOV, AVI, MKV, WebM, FLV, WMV, M4V"
+            ),
+        )
+
+        st.markdown("""
+            <div class="privacy-note">
+            🔒 Privacy: Your files are processed locally using Whisper. Nothing is uploaded or permanently saved.
+            </div>
+            """, unsafe_allow_html=True)
+
+        if uploaded:
+            suffix = Path(uploaded.name).suffix.lower()
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+            with st.spinner("Saving file to disk…"):
+                shutil.copyfileobj(uploaded, tmp)
+            tmp.close()
+
+            st.session_state.temp_path = tmp.name
+            st.session_state.is_video  = is_video(uploaded.name)
+            st.session_state.file_name = uploaded.name
+            st.session_state.file_size = file_size_human(tmp.name)
+            st.rerun()
 
     # ── How it works ──
     st.markdown("<br>", unsafe_allow_html=True)
     cols = st.columns(4)
     steps = [
-        ("📁", "Upload", "Drop any audio or video file up to 1 GB"),
-        ("🤖", "Transcribe", "Whisper AI converts speech to text locally"),
+        ("📁", "Upload", "Drop any audio or video file up to 200 MB"),
+        ("🤖", "Transcribe", "Whisper AI converts Video/Audio to text locally"),
         ("🕐", "Timestamps", "Every segment is time-coded and clickable"),
         ("⬇️", "Export", "Download as SRT, VTT, plain text, or JSON"),
     ]
@@ -576,17 +517,17 @@ elif st.session_state.segments is None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="section-label">Settings</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label">Settings (used for transcription)</div>', unsafe_allow_html=True)
         st.markdown(f"""
         <div style="background:var(--surface);border:1px solid var(--border);
                     border-radius:var(--radius);padding:14px 16px;
                     font-size:0.82rem;color:var(--text-dim);margin-bottom:16px">
-            <div>Model <span style="color:var(--accent);font-family:var(--mono)">{model_choice}</span>
-                 &nbsp;·&nbsp; {MODEL_INFO[model_choice]['size']}</div>
+            <div>Model <span style="color:var(--accent);font-family:var(--mono)">{st.session_state.model_choice}</span>
+                 &nbsp;·&nbsp; {MODEL_INFO[st.session_state.model_choice]['size']}</div>
             <div style="margin-top:4px">
-                Language <span style="color:var(--accent)">{lang_choice}</span>
+                Language <span style="color:var(--accent)">{st.session_state.lang_choice}</span>
                 &nbsp;·&nbsp;
-                Task <span style="color:var(--accent)">{task_choice}</span>
+                Task <span style="color:var(--accent)">{st.session_state.task_choice}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -595,7 +536,6 @@ elif st.session_state.segments is None:
 
             progress = st.progress(0, text="Initialising…")
 
-            # Step 1: Extract audio from video
             if st.session_state.is_video:
                 progress.progress(15, text="Extracting audio from video…")
                 audio_tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
@@ -609,18 +549,16 @@ elif st.session_state.segments is None:
             else:
                 st.session_state.audio_path = st.session_state.temp_path
 
-            # Step 2: Load model
-            progress.progress(30, text=f"Loading Whisper '{model_choice}' model…")
-            model = load_model(model_choice)
+            progress.progress(30, text=f"Loading Whisper '{st.session_state.model_choice}' model…")
+            model = load_model(st.session_state.model_choice)
 
-            # Step 3: Transcribe
-            lang_code = LANGUAGE_MAP[lang_choice]
+            lang_code = LANGUAGE_MAP[st.session_state.lang_choice]
             progress.progress(50, text="Transcribing… (may take a few minutes for long files)")
 
             result = model.transcribe(
                 st.session_state.audio_path,
                 language=lang_code,
-                task=task_choice,
+                task=st.session_state.task_choice,
                 verbose=False,
                 word_timestamps=True,
             )
@@ -635,6 +573,12 @@ elif st.session_state.segments is None:
             )
             progress.progress(100, text="Done!")
 
+            st.rerun()
+
+        # Reset button (moved from old sidebar)
+        st.markdown("---")
+        if st.button("🗑️  Clear & start over", use_container_width=True):
+            reset_state()
             st.rerun()
 
 
@@ -693,29 +637,31 @@ else:
                 "SRT", to_srt(segments),
                 file_name=f"{stem}.srt", mime="text/plain",
                 use_container_width=True,
-                help="SubRip subtitle format — compatible with most video players",
             )
         with ec2:
             st.download_button(
                 "VTT", to_vtt(segments),
                 file_name=f"{stem}.vtt", mime="text/vtt",
                 use_container_width=True,
-                help="WebVTT format — for web players and HTML5 video",
             )
         with ec3:
             st.download_button(
                 "TXT", to_txt(segments),
                 file_name=f"{stem}.txt", mime="text/plain",
                 use_container_width=True,
-                help="Plain text, no timestamps",
             )
         with ec4:
             st.download_button(
                 "JSON", to_json(segments),
                 file_name=f"{stem}.json", mime="application/json",
                 use_container_width=True,
-                help="Structured JSON with start/end times and text",
             )
+
+        # Reset button in final view too
+        st.markdown("---")
+        if st.button("🗑️  Clear & start over", use_container_width=True):
+            reset_state()
+            st.rerun()
 
     # ── RIGHT: Timestamped transcript ─────────────────────────────
     with col_right:
@@ -724,7 +670,6 @@ else:
             unsafe_allow_html=True,
         )
 
-        # Open scroll container
         st.markdown('<div class="transcript-wrap">', unsafe_allow_html=True)
 
         for i, seg in enumerate(segments):
@@ -734,7 +679,6 @@ else:
             active  = (st.session_state.seek_time >= t_start and
                        st.session_state.seek_time < t_end)
 
-            # Each segment: [timestamp button] [text]
             c_time, c_text = st.columns([1, 5], gap="small")
 
             with c_time:
@@ -743,7 +687,7 @@ else:
                     st.rerun()
 
             with c_text:
-                colour = "#f0b429" if active else "#eeeef2"
+                colour = "#2563eb" if active else "#374151"
                 st.markdown(
                     f'<div style="font-size:0.88rem;line-height:1.55;'
                     f'padding:4px 0;color:{colour}">{text}</div>',
